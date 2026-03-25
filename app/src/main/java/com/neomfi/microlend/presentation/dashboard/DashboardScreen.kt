@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -35,6 +36,7 @@ import com.neomfi.microlend.data.local.entity.LeadEntity
 @Composable
 fun DashboardScreen(
     onNavigateToAddLead: () -> Unit,
+    onNavigateToCreateGroup: () -> Unit,
     viewModel: DashboardViewModel = hiltViewModel()
 ){
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -77,7 +79,8 @@ fun DashboardScreen(
                 is DashboardUiState.Success ->{
                     DashboardContent(
                         groups = state.groups,
-                        unassignedLeads = state.unassignedLeads
+                        unassignedLeads = state.unassignedLeads,
+                        onNavigateToCreateGroup
                     )
                 }
             }
@@ -88,7 +91,8 @@ fun DashboardScreen(
 @Composable
 fun DashboardContent(
     groups: List<JlgGroupEntity>,
-    unassignedLeads: List<LeadEntity>
+    unassignedLeads: List<LeadEntity>,
+    onCreateGroupClick: () -> Unit
 ){
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -100,6 +104,10 @@ fun DashboardContent(
                 text = "Active JLG Groups",
                 style = MaterialTheme.typography.titleLarge
             )
+
+            TextButton(onClick = onCreateGroupClick){
+                Text("Form Group")
+            }
         }
 
         if(groups.isEmpty()){

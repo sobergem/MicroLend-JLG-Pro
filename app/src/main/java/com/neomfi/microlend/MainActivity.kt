@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.neomfi.microlend.presentation.addlead.AddLeadScreen
+import com.neomfi.microlend.presentation.creategroup.CreateGroupScreen
 import com.neomfi.microlend.presentation.dashboard.DashboardScreen
 import com.neomfi.microlend.presentation.navigation.Screen
 import com.neomfi.microlend.ui.theme.MicroLendJLGProTheme
@@ -30,6 +31,9 @@ class MainActivity : ComponentActivity() {
                       DashboardScreen(
                           onNavigateToAddLead ={
                               navController.navigate(Screen.AddLead.route)
+                          },
+                          onNavigateToCreateGroup = {
+                              navController.navigate(Screen.CreateGroup.route)
                           }
                       )
                   }
@@ -39,6 +43,14 @@ class MainActivity : ComponentActivity() {
                           onNavigationBack = {
                           navController.popBackStack()
                       })
+                  }
+
+                  composable(route = Screen.CreateGroup.route){
+                      CreateGroupScreen(
+                          onNavigateBack = {
+                              navController.popBackStack()
+                          }
+                      )
                   }
               }
           }
