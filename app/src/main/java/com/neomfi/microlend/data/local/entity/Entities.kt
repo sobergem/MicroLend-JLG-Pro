@@ -38,7 +38,7 @@ data class GroupWithMembers(
 data class LeadEntity(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val centerID: String,
-    val groupID: String,
+    val groupID: String?,
     val name: String,
     val aadhaarNumber: String,
     val syncStatus: SyncStatus

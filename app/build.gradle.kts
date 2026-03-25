@@ -77,4 +77,6 @@ dependencies {
 
     // --- Coroutines ---
     implementation(libs.coroutines.android)
+    // ---Jetpack Navigation---
+    implementation(libs.androidx.navigation.compose)
 }
