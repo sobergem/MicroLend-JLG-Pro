@@ -2,9 +2,11 @@ package com.neomfi.microlend.di
 
 import com.neomfi.microlend.data.repository.JlgGroupRepositoryImpl
 import com.neomfi.microlend.data.repository.LeadRepositoryImpl
+import com.neomfi.microlend.data.repository.SyncRepositoryImpl
 import com.neomfi.microlend.data.repository.VillageCenterRepositoryImpl
 import com.neomfi.microlend.domain.repository.JlgGroupRepository
 import com.neomfi.microlend.domain.repository.LeadRepository
+import com.neomfi.microlend.domain.repository.SyncRepository
 import com.neomfi.microlend.domain.repository.VillageCenterRepository
 import dagger.Binds
 import dagger.Module
@@ -26,4 +28,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindVillageCenterRepository(villageCenterRepositoryImpl: VillageCenterRepositoryImpl): VillageCenterRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindSyncRepository(syncRepositoryImpl: SyncRepositoryImpl): SyncRepository
 }

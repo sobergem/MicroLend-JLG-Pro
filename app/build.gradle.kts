@@ -79,4 +79,15 @@ dependencies {
     implementation(libs.coroutines.android)
     // ---Jetpack Navigation---
     implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.hilt.work)
+    ksp(libs.androidx.hilt.compiler) // Use kapt(...) if you are still using KAPT instead of KSP
+
+    implementation(libs.androidx.compose.material.icons.extended)
+
+    implementation(libs.okhttp.logging)
 }
