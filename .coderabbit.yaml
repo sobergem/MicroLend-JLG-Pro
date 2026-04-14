@@ -1,0 +1,15 @@
+# .coderabbit.yaml
+language: "kotlin"
+reviews:
+  profile: "chill" # Options: chill, assertive, or comprehensive
+  tools:
+    ast-grep:
+      enabled: true
+    linters:
+      enabled: true
+instructions: >
+  Please focus on Android-specific best practices:
+  1. Check for proper use of Jetpack Compose 'remember' and 'derivedStateOf'.
+  2. Ensure ViewModels do not hold references to Activities or Contexts.
+  3. Flag any heavy operations missing 'Dispatchers.IO'.
+  4. Ensure UI strings are not hardcoded (suggest using strings.xml).
