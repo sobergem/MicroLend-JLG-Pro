@@ -33,7 +33,7 @@ class DashboardViewModel @Inject constructor(
         getGroupsByCenter(currentCenterId),
         getUnassignedLeads()
     ) { groups, leads ->
-        val needsSync = groups.any{it.syncStatus== SyncStatus.UNASSIGNED} || leads.any{it.syncStatus == SyncStatus.UNASSIGNED}
+        val needsSync = groups.any{it.syncStatus== SyncStatus.PENDING} || leads.any{it.syncStatus == SyncStatus.PENDING}
 
         DashboardUiState.Success(
             groups = groups,

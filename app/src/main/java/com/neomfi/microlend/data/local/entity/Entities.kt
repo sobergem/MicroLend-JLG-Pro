@@ -6,9 +6,19 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 import java.util.UUID
 
-enum class SyncStatus{
-    UNASSIGNED, ASSIGNED, QUEUED, SYNCING, SYNCED, FAILED
+enum class SyncStatus {
+    PENDING,  // Waiting for WorkManager to pick it up
+    SYNCING,  // Currently in transit
+    SYNCED,   // Safely in the Node.js database
+    FAILED    // Network crashed, needs retry
 }
+
+enum class AssignmentStatus {
+    UNASSIGNED, // Sitting in the Field Officer's queue
+    ASSIGNED,   // Attached to a JLG Group
+    REJECTED    // KYC failed or manager declined
+}
+
 @Entity(tableName = "village_centers")
 data class VillageCenterEntity(
     @PrimaryKey val id:String,
@@ -41,5 +51,6 @@ data class LeadEntity(
     val groupID: String?,
     val name: String,
     val aadhaarNumber: String,
-    val syncStatus: SyncStatus
+    val syncStatus: SyncStatus = SyncStatus.PENDING,
+    val assignmentStatus: AssignmentStatus = AssignmentStatus.UNASSIGNED
 )

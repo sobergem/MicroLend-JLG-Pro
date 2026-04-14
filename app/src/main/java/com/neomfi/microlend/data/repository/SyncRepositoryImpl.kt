@@ -17,8 +17,8 @@ class SyncRepositoryImpl @Inject constructor(
 ): SyncRepository {
     override suspend fun performBulkSync(): Boolean {
         return try{
-            val unSyncedLeads = leadDao.getLeadsBySyncStatus(SyncStatus.UNASSIGNED.name)
-            val unSyncedGroups = groupDao.getGroupsBySyncStatus(SyncStatus.UNASSIGNED.name)
+            val unSyncedLeads = leadDao.getLeadsBySyncStatus(SyncStatus.PENDING.name)
+            val unSyncedGroups = groupDao.getGroupsBySyncStatus(SyncStatus.PENDING.name)
 
             if(unSyncedGroups.isEmpty() && unSyncedLeads.isEmpty()){
                 return true
@@ -26,14 +26,11 @@ class SyncRepositoryImpl @Inject constructor(
             val request = BulkSyncRequest(unSyncedGroups.map{it.toDto()}, unSyncedLeads.map{it.toDto()})
             val response = api.syncBulkData(request)
             if(response.isSuccessful){
-                unSyncedGroups.forEach { group ->
-                    groupDao.insertGroup(group.copy(syncStatus = SyncStatus.SYNCED))
-                }
+                val groupIds = unSyncedGroups.map { it.id }
+                val leadIds = unSyncedLeads.map { it.id }
 
-                // Update Leads
-                unSyncedLeads.forEach { lead ->
-                    leadDao.insertLead(lead.copy(syncStatus = SyncStatus.SYNCED))
-                }
+                if (groupIds.isNotEmpty()) groupDao.markGroupsAsSynced(groupIds, SyncStatus.SYNCED)
+                if (leadIds.isNotEmpty()) leadDao.markLeadsAsSynced(leadIds, SyncStatus.SYNCED)
 
                 Log.d("SyncRepository", "Bulk sync successful!")
                 true
