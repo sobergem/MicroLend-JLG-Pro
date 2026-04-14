@@ -2,6 +2,7 @@ package com.neomfi.microlend.presentation.dashboard
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,10 +41,12 @@ fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel()
 ){
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val syncState by viewModel.syncWorkState.collectAsStateWithLifecycle()
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {Text("MicroLend JLG Pro")},
+                title = { Text("MicroLend JLG Pro") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -58,36 +61,53 @@ fun DashboardScreen(
                 Icon(Icons.Default.Add, contentDescription = "Add Lead")
             }
         }
-    ){
-        paddingValues ->
-        Box(
-            modifier= Modifier
+    ){ paddingValues ->
+        // We use a Column to stack the Sync Card on top of your lists
+        Column(
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-        ){
-            when(val state = uiState){
-                is DashboardUiState.Loading ->{
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                }
-                is DashboardUiState.Error ->{
-                    Text(
-                        text = "Error: $(state.message)",
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-                is DashboardUiState.Success ->{
-                    DashboardContent(
-                        groups = state.groups,
-                        unassignedLeads = state.unassignedLeads,
-                        onNavigateToCreateGroup
-                    )
+        ) {
+            val hasUnsyncedData = (uiState as? DashboardUiState.Success)?.hasUnSyncedData ?: false
+
+
+            // 1. The new Sync Status Card
+            if(hasUnsyncedData) {
+                SyncStatusCard(
+                    syncState = syncState,
+                    onSyncClick = { viewModel.triggerManualSync() }
+                )
+            }
+
+            // 2. The Box takes up the rest of the screen space for the lists
+            Box(
+                modifier = Modifier.weight(1f)
+            ){
+                when(val state = uiState){
+                    is DashboardUiState.Loading ->{
+                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                    }
+                    is DashboardUiState.Error ->{
+                        Text(
+                            text = "Error: ${state.message}", // Fixed string interpolation
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                    is DashboardUiState.Success ->{
+                        DashboardContent(
+                            groups = state.groups,
+                            unassignedLeads = state.unassignedLeads,
+                            onCreateGroupClick = onNavigateToCreateGroup // Fixed named parameter
+                        )
+                    }
                 }
             }
         }
     }
 }
 
+// Your existing DashboardContent remains perfectly intact down here!
 @Composable
 fun DashboardContent(
     groups: List<JlgGroupEntity>,
@@ -113,15 +133,15 @@ fun DashboardContent(
         if(groups.isEmpty()){
             item{ Text("No groups created yet.", style = MaterialTheme.typography.bodyMedium)}
         }else{
-           items(groups){group->
-               Card(modifier = Modifier.fillMaxWidth()){
-                   Text(
-                       text = "Group: ${group.name}",
-                       modifier = Modifier.padding(16.dp),
-                       style = MaterialTheme.typography.titleMedium
-                   )
-               }
-           }
+            items(groups){ group ->
+                Card(modifier = Modifier.fillMaxWidth()){
+                    Text(
+                        text = "Group: ${group.name}",
+                        modifier = Modifier.padding(16.dp),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
         }
         item{
             Divider(modifier = Modifier.padding(vertical = 8.dp))
@@ -133,7 +153,7 @@ fun DashboardContent(
         if(unassignedLeads.isEmpty()){
             item{ Text("No pending leads.", style = MaterialTheme.typography.bodyMedium)}
         }else{
-            items(unassignedLeads){unassignedLead->
+            items(unassignedLeads){ unassignedLead ->
                 Card(modifier = Modifier.fillMaxWidth()){
                     Text(
                         text = "Lead: ${unassignedLead.name}",
@@ -145,4 +165,3 @@ fun DashboardContent(
         }
     }
 }
-

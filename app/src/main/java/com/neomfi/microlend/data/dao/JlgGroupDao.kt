@@ -18,4 +18,7 @@ interface JlgGroupDao {
 
     @Delete
     suspend fun deleteGroup(group: JlgGroupEntity)
+
+    @Query("SELECT * FROM jlg_groups WHERE syncStatus = :syncStatus")
+    suspend fun getGroupsBySyncStatus(syncStatus: String): List<JlgGroupEntity>
 }

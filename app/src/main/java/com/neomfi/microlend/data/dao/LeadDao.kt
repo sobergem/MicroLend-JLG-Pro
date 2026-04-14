@@ -31,4 +31,7 @@ interface LeadDao {
 
     @Delete
     suspend fun deleteLead(lead: LeadEntity)
+
+    @Query("SELECT * FROM leads WHERE syncStatus = :syncStatus")
+    suspend fun getLeadsBySyncStatus(syncStatus: String): List<LeadEntity>
 }
