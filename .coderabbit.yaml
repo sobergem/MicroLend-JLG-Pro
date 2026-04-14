@@ -1,24 +1,15 @@
-# .coderabbit.yaml
-language: "en" # Sets the AI's response language to English
-
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: "en-US"
+early_access: false
 reviews:
   profile: "chill"
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: true
+  review_status: true
+  review_details: false
   auto_review:
     enabled: true
-    ignore_paths:
-      - "**/build/**"
-      - "**/*.xml" # Optional: ignores layout/drawable noise; remove if you want XML reviews
-      - "**/generated/**"
-      - "*.md"
-  tools:
-    ast-grep:
-      enabled: true
-    linters:
-      enabled: true
-
-instructions: >
-  Please focus on Android-specific best practices:
-  1. Check for proper use of Jetpack Compose 'remember' and 'derivedStateOf'.
-  2. Ensure ViewModels do not hold references to Activities or Contexts.
-  3. Flag any heavy operations missing 'Dispatchers.IO'.
-  4. Ensure UI strings are not hardcoded (suggest using strings.xml).
+    drafts: false
+chat:
+  auto_reply: true
