@@ -1,12 +1,21 @@
 # .coderabbit.yaml
-language: "kotlin"
+language: "en" # Sets the AI's response language to English
+
 reviews:
-  profile: "chill" # Options: chill, assertive, or comprehensive
+  profile: "chill"
+  auto_review:
+    enabled: true
+    ignore_paths:
+      - "**/build/**"
+      - "**/*.xml" # Optional: ignores layout/drawable noise; remove if you want XML reviews
+      - "**/generated/**"
+      - "*.md"
   tools:
     ast-grep:
       enabled: true
     linters:
       enabled: true
+
 instructions: >
   Please focus on Android-specific best practices:
   1. Check for proper use of Jetpack Compose 'remember' and 'derivedStateOf'.
