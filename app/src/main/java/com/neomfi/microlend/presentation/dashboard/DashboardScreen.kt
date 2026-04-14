@@ -33,6 +33,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neomfi.microlend.data.local.entity.JlgGroupEntity
 import com.neomfi.microlend.data.local.entity.LeadEntity
 
+import androidx.compose.runtime.*
+import kotlinx.coroutines.delay
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.work.WorkInfo
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
@@ -41,7 +48,6 @@ fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel()
 ){
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val syncState by viewModel.syncWorkState.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -62,24 +68,38 @@ fun DashboardScreen(
             }
         }
     ){ paddingValues ->
-        // We use a Column to stack the Sync Card on top of your lists
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            val successState = uiState as? DashboardUiState.Success
             val hasUnsyncedData = (uiState as? DashboardUiState.Success)?.hasUnSyncedData ?: false
+            val displaySyncState = successState?.displaySyncState
 
+            var showSuccessDelay by remember { mutableStateOf(false) }
 
-            // 1. The new Sync Status Card
-            if(hasUnsyncedData) {
+            LaunchedEffect(displaySyncState) {
+                if (displaySyncState == WorkInfo.State.SUCCEEDED && !hasUnsyncedData) {
+                    showSuccessDelay = true // Keep card visible
+                    delay(1000)             // Wait 1 seconds so the user can read it
+                    showSuccessDelay = false // Time's up, let it hide
+                }
+            }
+
+            val shouldShowCard = hasUnsyncedData || showSuccessDelay
+
+            AnimatedVisibility(
+                visible = shouldShowCard,
+                enter = expandVertically(),
+                exit = shrinkVertically()
+            ) {
                 SyncStatusCard(
-                    syncState = syncState,
+                    syncState = displaySyncState,
                     onSyncClick = { viewModel.triggerManualSync() }
                 )
             }
 
-            // 2. The Box takes up the rest of the screen space for the lists
             Box(
                 modifier = Modifier.weight(1f)
             ){
@@ -107,7 +127,6 @@ fun DashboardScreen(
     }
 }
 
-// Your existing DashboardContent remains perfectly intact down here!
 @Composable
 fun DashboardContent(
     groups: List<JlgGroupEntity>,
