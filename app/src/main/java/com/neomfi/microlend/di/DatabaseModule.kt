@@ -25,7 +25,7 @@ object DatabaseModule {
             context,
             MicroLendDatabase::class.java,
             "microlend_local_db"
-        ).fallbackToDestructiveMigration()
+        ).addMigrations(MIGRATION_1_2)
             .build()
     }
     @Provides

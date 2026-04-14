@@ -38,7 +38,7 @@ class CreateGroupViewModel @Inject constructor(
                 id = newGroupId,
                 centerID = currentCenterID,
                 name = groupName,
-                syncStatus = SyncStatus.UNASSIGNED
+                syncStatus = SyncStatus.PENDING
             )
 
             insertGroupUseCase(newGroup)

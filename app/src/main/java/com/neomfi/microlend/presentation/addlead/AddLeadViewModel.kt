@@ -2,6 +2,7 @@ package com.neomfi.microlend.presentation.addlead
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.neomfi.microlend.data.local.entity.AssignmentStatus
 import com.neomfi.microlend.data.local.entity.LeadEntity
 import com.neomfi.microlend.data.local.entity.SyncStatus
 import com.neomfi.microlend.domain.usecase.InsertLeadUseCase
@@ -22,7 +23,8 @@ class AddLeadViewModel @Inject constructor(
                 groupID = null,
                 name = name,
                 aadhaarNumber = aadhaarNumber,
-                syncStatus = SyncStatus.UNASSIGNED
+                syncStatus = SyncStatus.PENDING,
+                assignmentStatus = AssignmentStatus.UNASSIGNED
             )
             insertLeadUseCase(newLead)
             onSuccess()

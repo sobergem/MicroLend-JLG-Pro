@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.neomfi.microlend.data.local.entity.LeadEntity
+import com.neomfi.microlend.data.local.entity.SyncStatus
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -34,4 +35,6 @@ interface LeadDao {
 
     @Query("SELECT * FROM leads WHERE syncStatus = :syncStatus")
     suspend fun getLeadsBySyncStatus(syncStatus: String): List<LeadEntity>
+    @Query("UPDATE leads SET syncStatus = :syncStatus WHERE id IN (:leadIds)")
+    suspend fun markLeadsAsSynced(leadIds: List<String>, syncStatus: String)
 }

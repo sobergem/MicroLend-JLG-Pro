@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.neomfi.microlend.data.local.entity.JlgGroupEntity
+import com.neomfi.microlend.data.local.entity.SyncStatus
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -21,4 +22,6 @@ interface JlgGroupDao {
 
     @Query("SELECT * FROM jlg_groups WHERE syncStatus = :syncStatus")
     suspend fun getGroupsBySyncStatus(syncStatus: String): List<JlgGroupEntity>
+    @Query("UPDATE jlg_groups SET syncStatus = :syncStatus WHERE id IN (:groupIds)")
+    suspend fun markGroupsAsSynced(groupIds: List<String>, syncStatus: String)
 }
