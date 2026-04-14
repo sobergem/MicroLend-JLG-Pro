@@ -1,6 +1,8 @@
 package com.neomfi.microlend.data.repository
 
 import android.util.Log
+import androidx.room.withTransaction
+import com.neomfi.microlend.data.MicroLendDatabase
 import com.neomfi.microlend.data.dao.JlgGroupDao
 import com.neomfi.microlend.data.dao.LeadDao
 import com.neomfi.microlend.data.local.entity.SyncStatus
@@ -13,7 +15,8 @@ import javax.inject.Inject
 class SyncRepositoryImpl @Inject constructor(
     private val leadDao : LeadDao,
     private val groupDao: JlgGroupDao,
-    private val api: MicroLendApi
+    private val api: MicroLendApi,
+    private val database: MicroLendDatabase
 ): SyncRepository {
     override suspend fun performBulkSync(): Boolean {
         return try{
@@ -29,8 +32,11 @@ class SyncRepositoryImpl @Inject constructor(
                 val groupIds = unSyncedGroups.map { it.id }
                 val leadIds = unSyncedLeads.map { it.id }
 
-                if (groupIds.isNotEmpty()) groupDao.markGroupsAsSynced(groupIds, SyncStatus.SYNCED)
-                if (leadIds.isNotEmpty()) leadDao.markLeadsAsSynced(leadIds, SyncStatus.SYNCED)
+                database.withTransaction {
+                    if (groupIds.isNotEmpty()) groupDao.markGroupsAsSynced(groupIds, SyncStatus.SYNCED.name)
+                    if (leadIds.isNotEmpty()) leadDao.markLeadsAsSynced(leadIds, SyncStatus.SYNCED.name)
+                }
+
 
                 Log.d("SyncRepository", "Bulk sync successful!")
                 true

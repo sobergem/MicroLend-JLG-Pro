@@ -36,5 +36,5 @@ interface LeadDao {
     @Query("SELECT * FROM leads WHERE syncStatus = :syncStatus")
     suspend fun getLeadsBySyncStatus(syncStatus: String): List<LeadEntity>
     @Query("UPDATE leads SET syncStatus = :syncStatus WHERE id IN (:leadIds)")
-    suspend fun markLeadsAsSynced(leadIds: List<String>, syncStatus: SyncStatus)
+    suspend fun markLeadsAsSynced(leadIds: List<String>, syncStatus: String)
 }
