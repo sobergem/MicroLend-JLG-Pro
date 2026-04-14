@@ -8,7 +8,8 @@ sealed interface DashboardUiState {
     data class Success(
         val groups:List<JlgGroupEntity>,
         val unassignedLeads: List<LeadEntity>,
-        val hasUnSyncedData: Boolean
+        val hasUnSyncedData: Boolean,
+        val displaySyncState: androidx.work.WorkInfo.State?
     ) : DashboardUiState
     data class Error(val message: String) : DashboardUiState
 }
