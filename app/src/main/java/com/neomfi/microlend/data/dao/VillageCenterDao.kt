@@ -13,5 +13,8 @@ interface VillageCenterDao {
     fun getAllCenters(): Flow<List<VillageCenterEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCenter(centerDao: VillageCenterEntity)
+    suspend fun insertCenters(centers: List<VillageCenterEntity>)
+
+    @Query("DELETE FROM village_centers")
+    suspend fun clearAllCenters()
 }
