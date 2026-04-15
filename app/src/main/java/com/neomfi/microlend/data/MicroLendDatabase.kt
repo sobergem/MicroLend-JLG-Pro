@@ -18,7 +18,7 @@ import com.neomfi.microlend.data.local.entity.VillageCenterEntity
         JlgGroupEntity::class,
         LeadEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(SyncStatusConverter::class)

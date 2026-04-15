@@ -23,7 +23,9 @@ enum class AssignmentStatus {
 data class VillageCenterEntity(
     @PrimaryKey val id:String,
     val name: String,
-    val pinCode: String
+    val villageName: String,
+    val meetingDay: String,
+    val pinCode: String? = null
 )
 
 @Entity(tableName = "jlg_groups")
