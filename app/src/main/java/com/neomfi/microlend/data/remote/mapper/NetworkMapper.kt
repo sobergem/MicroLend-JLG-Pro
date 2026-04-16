@@ -6,9 +6,7 @@ import com.neomfi.microlend.data.local.entity.VillageCenterEntity
 import com.neomfi.microlend.data.remote.dto.CenterDto
 import com.neomfi.microlend.data.remote.dto.GroupDto
 import com.neomfi.microlend.data.remote.dto.LeadDto
-import com.neomfi.microlend.domain.model.AssignmentStatus
 import com.neomfi.microlend.domain.model.Lead
-import com.neomfi.microlend.domain.model.SyncStatus
 import com.neomfi.microlend.domain.model.VillageCenter
 
 fun LeadEntity.toDto(): LeadDto{
@@ -63,8 +61,8 @@ fun Lead.toEntity():LeadEntity{
         phone = this.phone,
         monthlyIncome = this.monthlyIncome,
         monthlyExpenses = this.monthlyExpenses,
-        syncStatus = this.syncStatus.name,
-        assignmentStatus = this.assignmentStatus.name
+        syncStatus = this.syncStatus.toDbString(),
+        assignmentStatus = this.assignmentStatus.toDbString()
     )
 }
 
@@ -78,8 +76,8 @@ fun LeadEntity.toDomain():Lead{
         phone = this.phone,
         monthlyIncome = this.monthlyIncome,
         monthlyExpenses = this.monthlyExpenses,
-        syncStatus = SyncStatus.valueOf(this.syncStatus),
-        assignmentStatus = AssignmentStatus.valueOf(this.assignmentStatus)
+        syncStatus = this.syncStatus.toSyncStatus(),
+        assignmentStatus = this.assignmentStatus.toAssignmentStatus()
     )
 }
 

@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.neomfi.microlend.data.local.entity.LeadEntity
-import com.neomfi.microlend.data.local.entity.SyncStatus
 import kotlinx.coroutines.flow.Flow
 
 @Dao

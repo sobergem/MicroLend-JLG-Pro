@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.neomfi.microlend.data.local.entity.JlgGroupEntity
-import com.neomfi.microlend.data.local.entity.SyncStatus
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -3,8 +3,9 @@ package com.neomfi.microlend.presentation.creategroup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.neomfi.microlend.data.local.entity.JlgGroupEntity
-import com.neomfi.microlend.data.local.entity.SyncStatus
+import com.neomfi.microlend.data.remote.mapper.toDbString
 import com.neomfi.microlend.domain.model.Lead
+import com.neomfi.microlend.domain.model.SyncStatus
 import com.neomfi.microlend.domain.usecase.GetUnassignedLeadsUseCase
 import com.neomfi.microlend.domain.usecase.InsertGroupUseCase
 import com.neomfi.microlend.domain.usecase.UpdateLeadUseCase
@@ -38,7 +39,7 @@ class CreateGroupViewModel @Inject constructor(
                 id = newGroupId,
                 centerID = currentCenterID,
                 name = groupName,
-                syncStatus = SyncStatus.PENDING
+                syncStatus = SyncStatus.PENDING.toDbString()
             )
 
             insertGroupUseCase(newGroup)
