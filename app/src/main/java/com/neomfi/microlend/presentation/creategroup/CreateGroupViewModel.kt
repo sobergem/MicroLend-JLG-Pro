@@ -3,8 +3,8 @@ package com.neomfi.microlend.presentation.creategroup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.neomfi.microlend.data.local.entity.JlgGroupEntity
-import com.neomfi.microlend.data.local.entity.LeadEntity
 import com.neomfi.microlend.data.local.entity.SyncStatus
+import com.neomfi.microlend.domain.model.Lead
 import com.neomfi.microlend.domain.usecase.GetUnassignedLeadsUseCase
 import com.neomfi.microlend.domain.usecase.InsertGroupUseCase
 import com.neomfi.microlend.domain.usecase.UpdateLeadUseCase
@@ -24,13 +24,13 @@ class CreateGroupViewModel @Inject constructor(
 ): ViewModel() {
     private val currentCenterID = "CENTER_123"
 
-    val unassignedLeads: StateFlow<List<LeadEntity>> = getUnassignedLeadsUseCase().stateIn(
+    val unassignedLeads: StateFlow<List<Lead>> = getUnassignedLeadsUseCase().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = emptyList()
     )
 
-    fun createGroup(groupName: String, selectedLeads : List<LeadEntity>, onSuccess:() -> Unit){
+    fun createGroup(groupName: String, selectedLeads : List<Lead>, onSuccess:() -> Unit){
         viewModelScope.launch{
             val newGroupId = UUID.randomUUID().toString()
 
@@ -44,7 +44,7 @@ class CreateGroupViewModel @Inject constructor(
             insertGroupUseCase(newGroup)
 
             selectedLeads.forEach { lead ->
-                val updatedLead = lead.copy(groupID = newGroupId)
+                val updatedLead = lead.copy(groupId = newGroupId)
                 updateLeadUseCase(updatedLead)
             }
 

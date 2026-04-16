@@ -9,6 +9,17 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         database.execSQL(
             "ALTER TABLE leads ADD COLUMN assignmentStatus TEXT NOT NULL DEFAULT 'UNASSIGNED'"
         )
+        database.execSQL(
+            "ALTER TABLE leads ADD COLUMN phone TEXT NOT NULL DEFAULT ''"
+        )
+
+        database.execSQL(
+            "ALTER TABLE leads ADD COLUMN monthlyIncome REAL NOT NULL DEFAULT 0.0"
+        )
+
+        database.execSQL(
+            "ALTER TABLE leads ADD COLUMN monthlyExpenses REAL NOT NULL DEFAULT 0.0"
+        )
 
         // Note: If you also added the CenterEntity in this PR, you must tell Room to create that table too!
         // database.execSQL("CREATE TABLE IF NOT EXISTS `centers` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`id`))")

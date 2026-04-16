@@ -3,8 +3,9 @@ package com.neomfi.microlend.presentation.dashboard
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
-import com.neomfi.microlend.data.local.entity.SyncStatus
+
 import com.neomfi.microlend.domain.SyncManager
+import com.neomfi.microlend.domain.model.SyncStatus
 import com.neomfi.microlend.domain.model.VillageCenter
 import com.neomfi.microlend.domain.usecase.GetAllCenters
 import com.neomfi.microlend.domain.usecase.GetGroupsByCenterUseCase
@@ -40,7 +41,7 @@ class DashboardViewModel @Inject constructor(
         getGroupsByCenter(currentCenterId),
         getUnassignedLeads(),syncManager.observeSyncState()
     ) { groups, leads, workState ->
-        val needsSync = groups.any{it.syncStatus== SyncStatus.PENDING} || leads.any{it.syncStatus == SyncStatus.PENDING}
+        val needsSync = leads.any{it.syncStatus == SyncStatus.PENDING}
 
         val calculateSyncState = if(needsSync && workState == WorkInfo.State.SUCCEEDED){
             null
