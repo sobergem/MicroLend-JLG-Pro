@@ -53,6 +53,9 @@ data class LeadEntity(
     val groupID: String?,
     val name: String,
     val aadhaarNumber: String,
-    val syncStatus: SyncStatus = SyncStatus.PENDING,
-    val assignmentStatus: AssignmentStatus = AssignmentStatus.UNASSIGNED
+    val phone: String,
+    val monthlyIncome: Double,
+    val monthlyExpenses: Double,
+    val syncStatus: String,
+    val assignmentStatus: String
 )

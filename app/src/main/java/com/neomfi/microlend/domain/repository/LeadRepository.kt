@@ -1,14 +1,16 @@
 package com.neomfi.microlend.domain.repository
 
-import com.neomfi.microlend.data.local.entity.LeadEntity
+import com.neomfi.microlend.domain.model.Lead
 import kotlinx.coroutines.flow.Flow
 
 interface LeadRepository {
-    fun getAllLeads(): Flow<List<LeadEntity>>
-    fun getUnassignedLeads(): Flow<List<LeadEntity>>
-    fun getLeadsByGroup(groupId: String): Flow<List<LeadEntity>>
+    fun getAllLeads(): Flow<List<Lead>>
+    fun getUnassignedLeads(): Flow<List<Lead>>
+    fun getLeadsByGroup(groupId: String): Flow<List<Lead>>
 
-    suspend fun insertLead(lead: LeadEntity)
-    suspend fun updateLead(lead: LeadEntity)
-    suspend fun deleteLead(lead: LeadEntity)
+    suspend fun insertLead(lead: Lead)
+    suspend fun updateLead(lead: Lead)
+    suspend fun deleteLead(lead: Lead)
+
+    suspend fun updateSyncStatus(leadIds: List<String>, newStatus: String)
 }

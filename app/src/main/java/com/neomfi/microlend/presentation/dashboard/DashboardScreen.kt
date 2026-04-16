@@ -1,5 +1,8 @@
 package com.neomfi.microlend.presentation.dashboard
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,21 +27,20 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.neomfi.microlend.data.local.entity.JlgGroupEntity
-import com.neomfi.microlend.data.local.entity.LeadEntity
-
-import androidx.compose.runtime.*
-import kotlinx.coroutines.delay
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.work.WorkInfo
+import com.neomfi.microlend.data.local.entity.JlgGroupEntity
+import com.neomfi.microlend.domain.model.Lead
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -130,7 +132,7 @@ fun DashboardScreen(
 @Composable
 fun DashboardContent(
     groups: List<JlgGroupEntity>,
-    unassignedLeads: List<LeadEntity>,
+    unassignedLeads: List<Lead>,
     onCreateGroupClick: () -> Unit
 ){
     LazyColumn(
