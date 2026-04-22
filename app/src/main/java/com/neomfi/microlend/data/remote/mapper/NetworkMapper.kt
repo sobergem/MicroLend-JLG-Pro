@@ -6,6 +6,7 @@ import com.neomfi.microlend.data.local.entity.VillageCenterEntity
 import com.neomfi.microlend.data.remote.dto.CenterDto
 import com.neomfi.microlend.data.remote.dto.GroupDto
 import com.neomfi.microlend.data.remote.dto.LeadDto
+import com.neomfi.microlend.domain.model.JlgGroup
 import com.neomfi.microlend.domain.model.Lead
 import com.neomfi.microlend.domain.model.VillageCenter
 
@@ -92,5 +93,23 @@ fun Lead.toNetworkRequest(): LeadDto{
         monthlyIncome = this.monthlyIncome,
         monthlyExpenses = this.monthlyExpenses,
         assignedStatus = this.assignmentStatus.name
+    )
+}
+
+fun JlgGroup.toEntity(): JlgGroupEntity{
+    return JlgGroupEntity(
+        id = this.id,
+        centerID = this.centerID,
+        name = this.name,
+        syncStatus = this.syncStatus.toDbString()
+    )
+}
+
+fun JlgGroupEntity.toDomain(): JlgGroup{
+    return JlgGroup(
+        id = this.id,
+        centerID = this.centerID,
+        name = this.name,
+        syncStatus = this.syncStatus.toSyncStatus()
     )
 }

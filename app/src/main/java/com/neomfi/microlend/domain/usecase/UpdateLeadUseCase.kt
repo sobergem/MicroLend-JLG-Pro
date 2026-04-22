@@ -1,6 +1,5 @@
 package com.neomfi.microlend.domain.usecase
 
-import com.neomfi.microlend.data.local.entity.LeadEntity
 import com.neomfi.microlend.domain.model.Lead
 import com.neomfi.microlend.domain.repository.LeadRepository
 import javax.inject.Inject

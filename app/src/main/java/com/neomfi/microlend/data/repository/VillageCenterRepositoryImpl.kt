@@ -3,7 +3,6 @@ package com.neomfi.microlend.data.repository
 import androidx.room.withTransaction
 import com.neomfi.microlend.data.MicroLendDatabase
 import com.neomfi.microlend.data.dao.VillageCenterDao
-import com.neomfi.microlend.data.local.entity.VillageCenterEntity
 import com.neomfi.microlend.data.remote.api.MicroLendApi
 import com.neomfi.microlend.data.remote.mapper.toDomain
 import com.neomfi.microlend.data.remote.mapper.toEntity
@@ -24,7 +23,6 @@ class VillageCenterRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun insertCenter(centers:List<VillageCenterEntity>) = dao.insertCenters(centers)
     override suspend fun fetchAndCacheCenters(): Result<Unit> {
         return try{
             val response = api.getAllCenters()

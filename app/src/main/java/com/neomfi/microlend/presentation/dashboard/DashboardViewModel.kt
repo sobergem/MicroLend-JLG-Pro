@@ -4,9 +4,8 @@ import androidx.annotation.OptIn
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
-import com.neomfi.microlend.data.local.entity.JlgGroupEntity
-import com.neomfi.microlend.data.remote.mapper.toDbString
 import com.neomfi.microlend.domain.SyncManager
+import com.neomfi.microlend.domain.model.JlgGroup
 import com.neomfi.microlend.domain.model.Lead
 import com.neomfi.microlend.domain.model.VillageCenter
 import com.neomfi.microlend.domain.usecase.GetAllCenters
@@ -98,7 +97,7 @@ class DashboardViewModel @Inject constructor(
     private fun buildSuccessState(
         centers: List<VillageCenter>,
         currentCenterId: String,
-        groups: List<JlgGroupEntity>,
+        groups: List<JlgGroup>,
         leads: List<Lead>,
         workState: WorkInfo.State?,
         hasGlobalPendingSync: Boolean

@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.work.WorkInfo
-import com.neomfi.microlend.data.local.entity.JlgGroupEntity
+import com.neomfi.microlend.domain.model.JlgGroup
 import com.neomfi.microlend.domain.model.Lead
 import com.neomfi.microlend.domain.model.VillageCenter
 import kotlinx.coroutines.delay
@@ -51,7 +51,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun DashboardScreen(
     onNavigateToAddLead: () -> Unit,
-    onNavigateToCreateGroup: () -> Unit,
+    onNavigateToCreateGroup: (String) -> Unit,
     viewModel: DashboardViewModel = hiltViewModel()
 ){
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -130,7 +130,7 @@ fun DashboardScreen(
                             groups = state.groups,
                             unassignedLeads = state.unassignedLeads,
                             onCenterSelected = viewModel::onCenterSelected,
-                            onCreateGroupClick = onNavigateToCreateGroup // Fixed named parameter
+                            onCreateGroupClick = { onNavigateToCreateGroup(state.selectedCenterId) } // Fixed named parameter
                         )
                     }
                     is DashboardUiState.Empty ->{
@@ -151,7 +151,7 @@ fun DashboardScreen(
 fun DashboardContent(
     centers: List<VillageCenter>,
     selectedCenterId: String,
-    groups: List<JlgGroupEntity>,
+    groups: List<JlgGroup>,
     unassignedLeads: List<Lead>,
     onCenterSelected: (String) -> Unit,
     onCreateGroupClick: () -> Unit

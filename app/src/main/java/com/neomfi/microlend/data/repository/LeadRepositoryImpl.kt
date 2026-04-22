@@ -1,7 +1,6 @@
 package com.neomfi.microlend.data.repository
 
 import com.neomfi.microlend.data.dao.LeadDao
-import com.neomfi.microlend.data.local.entity.LeadEntity
 import com.neomfi.microlend.data.remote.mapper.toDomain
 import com.neomfi.microlend.data.remote.mapper.toEntity
 import com.neomfi.microlend.domain.model.Lead
@@ -9,7 +8,6 @@ import com.neomfi.microlend.domain.repository.LeadRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-import kotlin.collections.map
 
 class LeadRepositoryImpl @Inject constructor(
     private val dao: LeadDao

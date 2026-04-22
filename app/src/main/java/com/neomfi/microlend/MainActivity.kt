@@ -4,9 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.neomfi.microlend.presentation.addlead.AddLeadScreen
 import com.neomfi.microlend.presentation.creategroup.CreateGroupScreen
 import com.neomfi.microlend.presentation.dashboard.DashboardScreen
@@ -33,8 +35,8 @@ class MainActivity : ComponentActivity() {
                           onNavigateToAddLead ={
                               navController.navigate(Screen.AddLead.route)
                           },
-                          onNavigateToCreateGroup = {
-                              navController.navigate(Screen.CreateGroup.route)
+                          onNavigateToCreateGroup = {centerId ->
+                              navController.navigate(Screen.CreateGroup.passCenterId(centerId))
                           }
                       )
                   }
@@ -46,7 +48,12 @@ class MainActivity : ComponentActivity() {
                       })
                   }
 
-                  composable(route = Screen.CreateGroup.route){
+                  composable(route = Screen.CreateGroup.route,
+                      arguments = listOf(
+                          navArgument("centerId"){
+                              type = NavType.StringType
+                          }
+                      )){
                       CreateGroupScreen(
                           onNavigateBack = {
                               navController.popBackStack()
