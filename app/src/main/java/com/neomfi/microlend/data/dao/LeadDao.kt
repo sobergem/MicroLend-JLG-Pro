@@ -39,4 +39,7 @@ interface LeadDao {
 
     @Query("SELECT EXISTS(SELECT 1 FROM leads WHERE syncStatus = 'PENDING')")
     fun hasUnSyncedLeads() : Flow<Boolean>
+
+    @Query("""UPDATE leads SET groupID = :groupId, assignmentStatus = :assignmentStatus WHERE id IN (:leadIds)""")
+    suspend fun assignLeadsToGroup(leadIds: List<String>, groupId: String, assignmentStatus: String)
 }

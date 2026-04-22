@@ -1,11 +1,13 @@
 package com.neomfi.microlend.presentation.creategroup
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.neomfi.microlend.data.local.entity.JlgGroupEntity
 import com.neomfi.microlend.data.remote.mapper.toDbString
+import com.neomfi.microlend.domain.model.JlgGroup
 import com.neomfi.microlend.domain.model.Lead
 import com.neomfi.microlend.domain.model.SyncStatus
+import com.neomfi.microlend.domain.usecase.CreateGroupWithLeadsUseCase
 import com.neomfi.microlend.domain.usecase.GetUnassignedLeadsUseCase
 import com.neomfi.microlend.domain.usecase.InsertGroupUseCase
 import com.neomfi.microlend.domain.usecase.UpdateLeadUseCase
@@ -19,12 +21,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateGroupViewModel @Inject constructor(
-    private val getUnassignedLeadsUseCase: GetUnassignedLeadsUseCase,
-    private val insertGroupUseCase: InsertGroupUseCase,
-    private val updateLeadUseCase: UpdateLeadUseCase
+    private val savedStateHandle: SavedStateHandle,
+    getUnassignedLeadsUseCase: GetUnassignedLeadsUseCase,
+    private val createGroupWithLeadsUseCase: CreateGroupWithLeadsUseCase
 ): ViewModel() {
-    private val currentCenterID = "CENTER_123"
-
+    private val currentCenterID : String = checkNotNull(savedStateHandle["centerId"])
     val unassignedLeads: StateFlow<List<Lead>> = getUnassignedLeadsUseCase(currentCenterID).stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -33,22 +34,7 @@ class CreateGroupViewModel @Inject constructor(
 
     fun createGroup(groupName: String, selectedLeads : List<Lead>, onSuccess:() -> Unit){
         viewModelScope.launch{
-            val newGroupId = UUID.randomUUID().toString()
-
-            val newGroup = JlgGroupEntity(
-                id = newGroupId,
-                centerID = currentCenterID,
-                name = groupName,
-                syncStatus = SyncStatus.PENDING.toDbString()
-            )
-
-            insertGroupUseCase(newGroup)
-
-            selectedLeads.forEach { lead ->
-                val updatedLead = lead.copy(groupId = newGroupId)
-                updateLeadUseCase(updatedLead)
-            }
-
+            createGroupWithLeadsUseCase(currentCenterID, groupName, selectedLeads)
             onSuccess()
         }
     }
