@@ -23,4 +23,7 @@ interface JlgGroupDao {
     suspend fun getGroupsBySyncStatus(syncStatus: String): List<JlgGroupEntity>
     @Query("UPDATE jlg_groups SET syncStatus = :syncStatus WHERE id IN (:groupIds)")
     suspend fun markGroupsAsSynced(groupIds: List<String>, syncStatus: String)
+
+    @Query("SELECT EXISTS(SELECT 1 FROM jlg_groups WHERE syncStatus = 'PENDING')")
+    fun hasUnSyncedGroups() : Flow<Boolean>
 }

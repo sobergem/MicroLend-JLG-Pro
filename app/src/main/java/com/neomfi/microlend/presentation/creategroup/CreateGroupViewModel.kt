@@ -25,7 +25,7 @@ class CreateGroupViewModel @Inject constructor(
 ): ViewModel() {
     private val currentCenterID = "CENTER_123"
 
-    val unassignedLeads: StateFlow<List<Lead>> = getUnassignedLeadsUseCase().stateIn(
+    val unassignedLeads: StateFlow<List<Lead>> = getUnassignedLeadsUseCase(currentCenterID).stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = emptyList()

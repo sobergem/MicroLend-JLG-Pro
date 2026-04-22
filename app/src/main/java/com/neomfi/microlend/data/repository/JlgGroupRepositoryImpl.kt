@@ -13,4 +13,5 @@ class JlgGroupRepositoryImpl @Inject constructor(
     override suspend fun insertGroup(group: JlgGroupEntity) = dao.insertGroup(group)
 
     override suspend fun deleteGroup(group: JlgGroupEntity) = dao.deleteGroup(group)
+    override fun hasUnSyncedGroup(): Flow<Boolean> = dao.hasUnSyncedGroups()
 }

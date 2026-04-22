@@ -17,4 +17,7 @@ interface VillageCenterDao {
 
     @Query("DELETE FROM village_centers")
     suspend fun clearAllCenters()
+
+    @Query("SELECT * FROM village_centers")
+    suspend fun getAllCentersSync(): List<VillageCenterEntity>
 }

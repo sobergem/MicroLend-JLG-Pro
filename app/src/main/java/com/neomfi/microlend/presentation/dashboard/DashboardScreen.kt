@@ -17,10 +17,14 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -40,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.work.WorkInfo
 import com.neomfi.microlend.data.local.entity.JlgGroupEntity
 import com.neomfi.microlend.domain.model.Lead
+import com.neomfi.microlend.domain.model.VillageCenter
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -103,7 +108,9 @@ fun DashboardScreen(
             }
 
             Box(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
             ){
                 when(val state = uiState){
                     is DashboardUiState.Loading ->{
@@ -118,9 +125,19 @@ fun DashboardScreen(
                     }
                     is DashboardUiState.Success ->{
                         DashboardContent(
+                            centers = state.centers,
+                            selectedCenterId = state.selectedCenterId,
                             groups = state.groups,
                             unassignedLeads = state.unassignedLeads,
+                            onCenterSelected = viewModel::onCenterSelected,
                             onCreateGroupClick = onNavigateToCreateGroup // Fixed named parameter
+                        )
+                    }
+                    is DashboardUiState.Empty ->{
+                        Text(
+                            text = "No centers assigned. Waiting for sync...",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.align(Alignment.Center)
                         )
                     }
                 }
@@ -129,10 +146,14 @@ fun DashboardScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardContent(
+    centers: List<VillageCenter>,
+    selectedCenterId: String,
     groups: List<JlgGroupEntity>,
     unassignedLeads: List<Lead>,
+    onCenterSelected: (String) -> Unit,
     onCreateGroupClick: () -> Unit
 ){
     LazyColumn(
@@ -140,6 +161,41 @@ fun DashboardContent(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ){
+        item {
+            var expanded by remember { mutableStateOf(false) }
+            val selectedCenterName =
+                centers.find { it.id == selectedCenterId }?.name ?: "Select Center"
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded }
+            ) {
+                OutlinedTextField(
+                    value = selectedCenterName,
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text("Active Center") },
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                    },
+                    modifier = Modifier.fillMaxWidth().menuAnchor(),
+                    colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
+                )
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    centers.forEach { center ->
+                        DropdownMenuItem(
+                            text = { Text("${center.name} (${center.villageName})") },
+                            onClick = {
+                                onCenterSelected(center.id)
+                                expanded = false
+                            })
+
+                    }
+                }
+            }
+        }
         item{
             Text(
                 text = "Active JLG Groups",
