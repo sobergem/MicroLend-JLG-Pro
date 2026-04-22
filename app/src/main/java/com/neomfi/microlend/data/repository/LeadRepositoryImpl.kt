@@ -17,7 +17,7 @@ class LeadRepositoryImpl @Inject constructor(
     override fun getAllLeads(): Flow<List<Lead>> = dao.getAllLeads().map{entityList ->
         entityList.map{it.toDomain()}
     }
-    override fun getUnassignedLeads(): Flow<List<Lead>> = dao.getUnassignedLeads().map{entityList ->
+    override fun getUnassignedLeads(centerId: String): Flow<List<Lead>> = dao.getUnassignedLeads(centerId).map{entityList ->
         entityList.map{it.toDomain()}
     }
 
@@ -36,5 +36,7 @@ class LeadRepositoryImpl @Inject constructor(
     ) {
         dao.markLeadsAsSynced(leadIds, newStatus)
     }
+
+    override fun hasUnSyncedLead(): Flow<Boolean> = dao.hasUnSyncedLeads()
 
 }

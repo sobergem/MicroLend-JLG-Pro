@@ -1,5 +1,7 @@
 package com.neomfi.microlend.data.repository
 
+import androidx.room.withTransaction
+import com.neomfi.microlend.data.MicroLendDatabase
 import com.neomfi.microlend.data.dao.VillageCenterDao
 import com.neomfi.microlend.data.local.entity.VillageCenterEntity
 import com.neomfi.microlend.data.remote.api.MicroLendApi
@@ -13,7 +15,8 @@ import javax.inject.Inject
 
 class VillageCenterRepositoryImpl @Inject constructor(
     private val dao: VillageCenterDao,
-    private val api: MicroLendApi
+    private val api: MicroLendApi,
+    private val database : MicroLendDatabase
 ) : VillageCenterRepository{
     override fun getAllCenters(): Flow<List<VillageCenter>>{
         return dao.getAllCenters().map{entityList ->
@@ -28,15 +31,26 @@ class VillageCenterRepositoryImpl @Inject constructor(
             if(response.isSuccessful){
                 val networkCenters = response.body()?:emptyList()
                 val centers = networkCenters.map { it.toEntity() }
-                dao.clearAllCenters()
-                dao.insertCenters(centers)
+                database.withTransaction {
+                    dao.clearAllCenters()
+                    dao.insertCenters(centers)
+                }
                 Result.success(Unit)
             }else{
-                Result.failure(Exception("Failed to fetch centers: ${response.code()}"))
+                val cachedCenters = dao.getAllCentersSync()
+                if(cachedCenters.isNotEmpty()){
+                    Result.success(Unit)
+                }else {
+                    Result.failure(Exception("Failed to fetch centers: ${response.code()}"))
+                }
             }
         }catch(e: Exception){
-            e.printStackTrace()
-            Result.failure(e)
+            val cachedCenters = dao.getAllCentersSync()
+            if (cachedCenters.isNotEmpty()) {
+                Result.success(Unit) // Safe to proceed offline
+            } else {
+                Result.failure(e)    // Fatal error
+            }
         }
     }
 

@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetUnassignedLeadsUseCase @Inject constructor(
     private val repository: LeadRepository
 ) {
-    operator fun invoke(): Flow<List<Lead>>{
-        return repository.getUnassignedLeads()
+    operator fun invoke(centerId: String): Flow<List<Lead>>{
+        return repository.getUnassignedLeads(centerId)
     }
 }

@@ -7,4 +7,6 @@ interface JlgGroupRepository {
     fun getGroupsByCenter(centerId: String): Flow<List<JlgGroupEntity>>
     suspend fun insertGroup(group: JlgGroupEntity)
     suspend fun deleteGroup(group: JlgGroupEntity)
+
+    fun hasUnSyncedGroup(): Flow<Boolean>
 }

@@ -20,8 +20,8 @@ interface LeadDao {
     fun getLeadsByGroupId(groupId: String): Flow<List<LeadEntity>>
 
     //3. Get leads that haven't been assigned to any group yet
-    @Query("SELECT * FROM leads WHERE groupID IS NULL")
-    fun getUnassignedLeads():Flow<List<LeadEntity>>
+    @Query("SELECT * FROM leads WHERE groupID IS NULL AND centerId = :centerId")
+    fun getUnassignedLeads(centerId: String):Flow<List<LeadEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLead(lead: LeadEntity)
@@ -36,4 +36,7 @@ interface LeadDao {
     suspend fun getLeadsBySyncStatus(syncStatus: String): List<LeadEntity>
     @Query("UPDATE leads SET syncStatus = :syncStatus WHERE id IN (:leadIds)")
     suspend fun markLeadsAsSynced(leadIds: List<String>, syncStatus: String)
+
+    @Query("SELECT EXISTS(SELECT 1 FROM leads WHERE syncStatus = 'PENDING')")
+    fun hasUnSyncedLeads() : Flow<Boolean>
 }

@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface LeadRepository {
     fun getAllLeads(): Flow<List<Lead>>
-    fun getUnassignedLeads(): Flow<List<Lead>>
+    fun getUnassignedLeads(centerId: String): Flow<List<Lead>>
     fun getLeadsByGroup(groupId: String): Flow<List<Lead>>
 
     suspend fun insertLead(lead: Lead)
@@ -13,4 +13,6 @@ interface LeadRepository {
     suspend fun deleteLead(lead: Lead)
 
     suspend fun updateSyncStatus(leadIds: List<String>, newStatus: String)
+
+    fun hasUnSyncedLead(): Flow<Boolean>
 }
